@@ -7,7 +7,7 @@ def sum_nums(num):
 
 def primes(num):
     result = [1, 2]
-    for i in map(lambda x: x + 1, range(num)):
+    for i in range(3, num + 1):
         for prime in result[1:]:
             while i % prime == 0:
                 i /= prime
@@ -27,7 +27,7 @@ def devide_primes(num, primes):
 if __name__ == '__main__':
     target = 10000
     primes = primes(target / 2)
-    for num in map(lambda x: x + 1, range(target)):
+    for num in range(1000, target):
         wa = sum_nums(num)
         soinsu = devide_primes(num, primes)
         if wa == len(soinsu) - 1:
