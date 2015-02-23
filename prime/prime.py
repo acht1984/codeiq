@@ -35,6 +35,7 @@ if __name__ == '__main__':
     # そのため素数リストの終端値を予め1/2する
     primes = primes(target / 2)
     # かけるの数も2の倍数の時が最大
+    # そのためlogを使用して最大桁数を求める
     limit = int(log(target, 2))
     for num in range(1000, target):
         wa = sum_nums(num)
