@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
 import operator
+import itertools
 
 
 def get_primes(stop):
@@ -18,9 +19,16 @@ def devide_primes(num, primes):
             num /= prime
 
 
-def get_products(data, i):
-    product = lambda x: reduce(operator.mul, x)
-    return tuple(map(product, (data[:i], data[i:])))
+def product(x):
+    return reduce(operator.mul, x, 1)
+
+
+def common_devide(x, y):
+    return product(i for i in x for j in y if i == j)
+
+
+def common_multiple(x, y):
+    return x[0] * y[0] / common_devide(set(x[1]), set(y[1]))
 
 
 def get_data_list(data):
@@ -40,27 +48,23 @@ def get_common_multiple(target):
     if target == 2:
         return [(1, target), (target, target)]
     else:
-        factorial = reduce(operator.mul, range(target + 1)[1:])
-        data = list(devide_primes(factorial, get_primes(target)))
+        factorial = product(range(target + 1)[1:])
+        primes = list(get_primes(target))
+        data = list(devide_primes(factorial, primes))
 
         result = [(1, factorial), (factorial, factorial)]
 
-        devides = (get_products(d, i)
-                    for d in get_data_list(data)
-                    for i in range(len(d))[1:])
-        # devides = ((x, y) for x, y in devides  if x <= y)
-        result += sorted(set((i, factorial) for x in devides
-                                            for i in x))
+        devides = set((product(d[:i]), tuple(sorted(d[:i])))
+                      for d in get_data_list(data)
+                      for i in range(len(d))[1:])
+        result += sorted(set((x, factorial) for x, items in devides))
 
-        tmp = []
-        prime_freq = [(prime, len(filter(lambda i: i == prime, data))) for prime in set(data)]
-        for p, f in prime_freq:
-            left = math.pow(p, f)
-            right = (math.pow(*pf) for pf in prime_freq if pf != (p, f))
-            right = reduce(operator.mul, right)
-            for r in (math.pow(p, i) * right for i in range(f)):
-                tmp.append(tuple(sorted([left, r])))
-        result += set(tmp)
+        products = ((x[0], y[0])
+                    for x, y in itertools.permutations(devides, 2)
+                    if x[0] <= y[0]
+                    if y[0] % x[0] != 0
+                    if common_multiple(x, y) == factorial)
+        result += list((x, y) for x, y in products)
 
         return result
 
@@ -68,5 +72,5 @@ if __name__ == '__main__':
     result = get_common_multiple(6)
     if result:
         print len(result)
-        for x, y in result:
-            print (x, y)
+        # for x, y in result:
+        #     print (x, y)
