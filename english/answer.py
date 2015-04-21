@@ -8,7 +8,10 @@ with open("./words.txt") as f:
     bigs = source[29:32]
     negative = source[32]
 
-print tens
-print hundred
-print bigs
-print negative
+
+def toEnglish(digit):
+    length = len(digit)
+    if length == 1 and digit == "0":
+        return nums[0]
+
+print toEnglish("0")
