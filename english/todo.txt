@@ -2,4 +2,26 @@
 12 twelve
 301 three hendred one
 
-1文字目が
+0のみならZero
+1文字目が-ならNegative
+
+ 1桁 １〜９の英語
+ 2桁
+   19以下 そのものを表す英語 ex.16 Sixteen
+   20以上 10位の英語
+ 3桁　１〜９の英語+Hundred
+ 4桁　１〜９の英語+Thousand
+ 5桁
+   19以下 そのものを表す英語 ex.16 Sixteen
+   20以上 10位の英語
+ 6桁　１〜９の英語+Hundred
+ 7桁　１〜９の英語+Million
+ 8桁
+   19以下 そのものを表す英語 ex.16 Sixteen
+   20以上 10位の英語
+ 9桁　１〜９の英語+Hundred
+10桁　１〜９の英語+Billion
+11桁
+   19以下 そのものを表す英語 ex.16 Sixteen
+   20以上 10位の英語
+12桁　１〜９の英語+Hundred
