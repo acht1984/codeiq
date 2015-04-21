@@ -49,5 +49,5 @@ def toEnglish(num):
                      if "".join(values))
     return text
 
-for num in open("./sample.in.txt"):
+for num in open("./testdata.in.txt"):
     print toEnglish(num[:-1])
