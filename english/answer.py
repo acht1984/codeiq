@@ -46,7 +46,7 @@ def toEnglish(num):
         num = num[1:]
     text += " ".join(" ".join(values + [key])
                      for key, values in reversed(devide(num))
-                     if "".join(values))
+                     if not all("" == v for v in values))
     return text
 
 for num in open("./testdata.in.txt"):
