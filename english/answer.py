@@ -44,7 +44,7 @@ def toEnglish(num):
     if num and num[0] == "-":
         text = negative + " "
         num = num[1:]
-    text += " ".join(" ".join(values + [key])
+    text += " ".join(" ".join(values + [key]).rstrip()
                      for key, values in reversed(devide(num))
                      if not all("" == v for v in values))
     return text
