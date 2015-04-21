@@ -1,0 +1,5 @@
+与えられた数値を数値を表す英語に変換
+12 twelve
+301 three hendred one
+
+1文字目が
