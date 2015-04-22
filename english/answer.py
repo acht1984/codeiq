@@ -11,11 +11,6 @@ with open("./words.txt") as f:
 
 def devide(digit):
     result = [(n, []) for n in bigs]
-    length = len(digit)
-    if length == 1 and digit == "0":
-        key, data = result[0]
-        data.append(nums[0])
-        return result
     first = ""
     for i, n in enumerate(reversed(digit)):
         key, data = result[i/3]
@@ -39,7 +34,13 @@ def devide(digit):
     return result
 
 
+def isZero(digit):
+    return len(digit) == 1 and digit == "0"
+
+
 def toEnglish(num):
+    if isZero(num):
+        return nums[0]
     text = ""
     if num and num[0] == "-":
         text = negative + " "
