@@ -11,23 +11,21 @@ with open("./words.txt") as f:
 
 def devide(digit):
     result = [(n, []) for n in thousands]
-    first = ""
     for i, n in enumerate(reversed(digit)):
         key, data = result[i/3]
         if i % 3 == 0:
-            first = n
             data.append(nums[int(n)])
-            continue
-        if i % 3 == 1:
-            del data[0]
+        elif i % 3 == 1:
+            first = nums.index(data[0])
             if n in ("0", "1"):
-                data.append(nums[int(n + first)])
-            elif first == "0":
+                data.append(nums[int(n + str(first))])
+            elif first == 0:
                 data.append(tens[int(n)])
             else:
                 data.append(tens[int(n)])
-                data.append(nums[int(first)])
-        if i % 3 == 2:
+                data.append(nums[first])
+            del data[0]
+        else:
             if n != "0":
                 data.insert(0, hundred)
                 data.insert(0, nums[int(n)])
