@@ -5,12 +5,12 @@ with open("./words.txt") as f:
     nums = source[:20]
     tens = ["", ""] + source[20:28]
     hundred = source[28]
-    bigs = [""] + source[29:32]
+    thousands = [""] + source[29:32]
     negative = source[32]
 
 
 def devide(digit):
-    result = [(n, []) for n in bigs]
+    result = [(n, []) for n in thousands]
     first = ""
     for i, n in enumerate(reversed(digit)):
         key, data = result[i/3]
