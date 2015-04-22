@@ -38,13 +38,17 @@ def isZero(digit):
     return len(digit) == 1 and digit == "0"
 
 
+def extractSign(digit):
+    if digit and digit[0] == "-":
+        return digit[1:], negative + " "
+    else:
+        return digit, ""
+
+
 def toEnglish(num):
     if isZero(num):
         return nums[0]
-    text = ""
-    if num and num[0] == "-":
-        text = negative + " "
-        num = num[1:]
+    num, text = extractSign(num)
     text += " ".join(" ".join(values + [key]).rstrip()
                      for key, values in reversed(devide(num))
                      if not all("" == v for v in values))
