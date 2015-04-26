@@ -40,7 +40,7 @@ def to_ten(num):
     elif n == "0":
         return tens[int(t)]
     else:
-        return " ".join((tens[int(t)], nums[int(n)]))
+        return "{0} {1}".format(tens[int(t)], nums[int(n)])
 
 
 def to_hundred(num):
@@ -48,7 +48,7 @@ def to_hundred(num):
     if h == "0":
         return to_ten(n+t)
     else:
-        return " ".join((nums[int(h)], hundred, to_ten(n+t)))
+        return "{0} {1} {2}".format(nums[int(h)], hundred, to_ten(n+t))
 
 
 def convert(num):
