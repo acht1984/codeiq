@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# 数字->英語変換表の作成
 with open("./words.txt") as f:
-    source = [num[:-1] for num in f]
+    source = [digit[:-1] for digit in f]
     nums = source[:20]
     tens = ["", ""] + source[20:28]
     hundred = source[28]
@@ -9,48 +10,71 @@ with open("./words.txt") as f:
     negative = source[32]
 
 
-def devide(digit):
-    result = [(n, []) for n in thousands]
-    for i, n in enumerate(reversed(digit)):
-        key, data = result[i/3]
-        if i % 3 == 0:
-            data.append(nums[int(n)])
-        elif i % 3 == 1:
-            first = nums.index(data[0])
-            if n in ("0", "1"):
-                data.append(nums[int(n + str(first))])
-            elif first == 0:
-                data.append(tens[int(n)])
-            else:
-                data.append(tens[int(n)])
-                data.append(nums[first])
-            del data[0]
-        else:
-            if n != "0":
-                data.insert(0, hundred)
-                data.insert(0, nums[int(n)])
-    return result
-
-
 def isZero(digit):
     return len(digit) == 1 and digit == "0"
 
 
-def extractSign(digit):
+def devideSign(digit):
     if digit and digit[0] == "-":
         return digit[1:], negative + " "
     else:
         return digit, ""
 
 
-def toEnglish(num):
-    if isZero(num):
-        return nums[0]
-    num, text = extractSign(num)
-    text += " ".join(" ".join(values + [key]).rstrip()
-                     for key, values in reversed(devide(num))
-                     if not all("" == v for v in values))
-    return text
+def extract(digit, i):
+    return [n for j, n in enumerate(reversed(digit)) if j/3 == i]
 
-for num in open("./testdata.in.txt"):
-    print toEnglish(num[:-1])
+
+def to_num(num):
+    if num[0] == "0":
+        return ""
+    return nums[int(num[0])]
+
+
+def to_ten(num):
+    n, t = num
+    if t == "0":
+        return to_num(n)
+    elif t == "1":
+        return nums[int(t + n)]
+    elif n == "0":
+        return tens[int(t)]
+    else:
+        return " ".join((tens[int(t)], nums[int(n)]))
+
+
+def to_hundred(num):
+    n, t, h = num
+    if h == "0":
+        return to_ten(n+t)
+    else:
+        return " ".join((nums[int(h)], hundred, to_ten(n+t)))
+
+
+def convert(num):
+    if len(num) == 0:
+        return ""
+    elif len(num) == 1:
+        return to_num(num)
+    elif len(num) == 2:
+        return to_ten(num)
+    else:
+        return to_hundred(num)
+
+
+def toEnglish(digit):
+    if isZero(digit):
+        return nums[0]
+    # マイナス符号を先に処理
+    digit, text = devideSign(digit)
+    # 千の表記ごとに(数値表記, 千の表記)のペアを作成
+    converted = [
+        (convert(extract(digit, i)), x) for i, x in enumerate(thousands)]
+    # 数値表記がないものを除外 ex.000
+    filtered = ((n, x) for n, x in reversed(converted) if n)
+    return text + " ".join(" ".join(x) for x in filtered)[:-1]
+
+
+if __name__ == '__main__':
+    for digit in open("./testdata.in.txt"):
+        print toEnglish(digit[:-1])
