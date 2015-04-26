@@ -3,33 +3,34 @@
 【必須】testdata.in.txtを入力としたときのプログラムの実行結果（出力内容）を記入してください。
 記入がない場合、プログラムの実行結果が正しくても減点の対象となります。
 
-（例）sample.out.txt
-One Hundred Twenty Three
-Four Thousand Five Hundred Sixty Seven
-Eighty Nine Thousand Twelve
-Zero
-Negative Thirty Four
-Negative Five Million Six Hundred Seventy Eight Thousand Nine Hundred One
-One Billion One Hundred Eleven Million One Hundred Eleven Thousand One Hundred Eleven
-
-
-
-
-
+Ten
+Fifteen Million Six Hundred Seventy Four Thousand Eight Hundred Seventy Three
+Four Million Six Hundred Twenty Thousand Eight Hundred Eighteen
+Fourteen Million Four Hundred Forty Thousand One Hundred Seventeen
+Six Million Eight Hundred Sixty Eight Thousand Four Hundred Sixty One
+Fourteen Million One Hundred Eighty One Thousand One Hundred Twenty Six
+Negative Three Hundred Eleven Million Five Hundred Forty One Thousand Three Hundred Fifty Four
+Five Hundred Four Million Three Hundred Forty Nine Thousan
+One Hundred Twenty Six Million Five Hundred Fifty Six Thousand Five Hundred Thirty
+One Billion Three Hundred One Million Six Hundred Seventy Nine Thousand Seven Hundred Seventy One
+Negative Two Hundred Twenty Three Million Five Hundred Ninety Four Thousand Nine Hundred Sixty Nine
 
 
 【必須】使用言語・動作環境について
 (1)言語の種類を記入してください。未記入の場合、減点となります。
 
-
+python
 
 (2)コンパイラ／インタプリタの名称・バージョン情報を記入してください。未記入の場合、減点となります。
 
-
+Python 2.7.8
 
 【必須】プログラムの特長・工夫した点等、アピールポイントについて。
 あなたが書いたコードの内容や工夫した点をわかりやすく説明してください。未記入の場合、大幅な減点となります。
 
+変換処理は千毎の繰り返し処理になるので、数値を千ごとに分割してまとめて処理するようにしました。
+zero変換とマイナス変換は特殊処理になるので、先に処理をするようにしました。
+百の位の処理、十の位の処理、一の位の処理をメソッド化することで、先頭が０の場合に百の位から十の位に処理を移せるようにしました。
 
 
 【任意】もし企業からのスカウトメールがきたらどのくらい積極的にアクションすると思いますか？下記の3つから選んでお答えください。
@@ -37,10 +38,90 @@ One Billion One Hundred Eleven Million One Hundred Eleven Thousand One Hundred E
  B.社名や条件次第では会ってみたいと思う
  C.よほどのことがない限り返信しない
 
-
+ B.社名や条件次第では会ってみたいと思う
 
 【必須】あなたが書いたコードを貼り付けてください。未記入の場合は評価できません。
 コードが完全な形（そのままコンパイル・実行）できるものでない場合は程度に応じて減点の対象となります。
 
 
+# -*- coding: utf-8 -*-
+
+# 数字->英語変換表の作成
+with open("./words.txt") as f:
+    source = [digit[:-1] for digit in f]
+    nums = source[:20]
+    tens = ["", ""] + source[20:28]
+    hundred = source[28]
+    thousands = [""] + source[29:32]
+    negative = source[32]
+
+
+def isZero(digit):
+    return len(digit) == 1 and digit == "0"
+
+
+def devideSign(digit):
+    if digit and digit[0] == "-":
+        return digit[1:], negative + " "
+    else:
+        return digit, ""
+
+
+def extract(digit, i):
+    return [n for j, n in enumerate(reversed(digit)) if j/3 == i]
+
+
+def to_num(num):
+    if num[0] == "0":
+        return ""
+    return nums[int(num[0])]
+
+
+def to_ten(num):
+    n, t = num
+    if t == "0":
+        return to_num(n)
+    elif t == "1":
+        return nums[int(t + n)]
+    elif n == "0":
+        return tens[int(t)]
+    else:
+        return "{0} {1}".format(tens[int(t)], nums[int(n)])
+
+
+def to_hundred(num):
+    n, t, h = num
+    if h == "0":
+        return to_ten(n+t)
+    else:
+        return "{0} {1} {2}".format(nums[int(h)], hundred, to_ten(n+t))
+
+
+def convert(num):
+    if len(num) == 0:
+        return ""
+    elif len(num) == 1:
+        return to_num(num)
+    elif len(num) == 2:
+        return to_ten(num)
+    else:
+        return to_hundred(num)
+
+
+def toEnglish(digit):
+    if isZero(digit):
+        return nums[0]
+    # マイナス符号を先に処理
+    digit, text = devideSign(digit)
+    # 千の表記ごとに(数値表記, 千の表記)のペアを作成
+    converted = [
+        (convert(extract(digit, i)), x) for i, x in enumerate(thousands)]
+    # 数値表記がないものを除外 ex.000
+    filtered = ((n, x) for n, x in reversed(converted) if n)
+    return text + " ".join(" ".join(x) for x in filtered)[:-1]
+
+
+if __name__ == '__main__':
+    for digit in open("./testdata.in.txt"):
+        print toEnglish(digit[:-1])
 
