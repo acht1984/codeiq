@@ -76,5 +76,7 @@ def toEnglish(digit):
 
 
 if __name__ == '__main__':
-    for digit in open("./testdata.in.txt"):
-        print toEnglish(digit[:-1]).rstrip()
+    with open("./testdata.in.txt") as f:
+        next(f)
+        for digit in f:
+            print toEnglish(digit[:-1]).rstrip()
