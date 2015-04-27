@@ -72,9 +72,9 @@ def toEnglish(digit):
         (convert(extract(digit, i)), x) for i, x in enumerate(thousands)]
     # 数値表記がないものを除外 ex.000
     filtered = ((n, x) for n, x in reversed(converted) if n)
-    return text + " ".join(" ".join(x) for x in filtered)[:-1]
+    return text + " ".join(" ".join(x) for x in filtered)
 
 
 if __name__ == '__main__':
     for digit in open("./testdata.in.txt"):
-        print toEnglish(digit[:-1])
+        print toEnglish(digit[:-1]).rstrip()
