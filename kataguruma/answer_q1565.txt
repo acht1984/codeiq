@@ -1,0 +1,136 @@
+※これは解答用テキストファイルです。
+
+【必須】「sample.in.txt」「sample.ans.txt」の内容を参考にして、
+「small.in.txt」と「large.in.txt」に対する解を、ここに記入してください。
+解が複数パターンあった場合でも、解はそれぞれのテストケースごとに1つづつ記入してください。
+
+(1)small.in.txtの解
+(186, 82)
+(183, 67)
+(175, 65)
+(168, 62)
+(164, 55)
+(161, 47)
+(158, 34)
+
+(2)large.in.txtの解
+(189, 106)
+(188, 101)
+(187, 100)
+(186, 97)
+(185, 94)
+(184, 93)
+(183, 90)
+(182, 89)
+(181, 87)
+(180, 86)
+(179, 85)
+(178, 84)
+(177, 79)
+(175, 78)
+(174, 77)
+(173, 74)
+(172, 72)
+(171, 70)
+(170, 66)
+(168, 65)
+(166, 64)
+(165, 63)
+(163, 62)
+(162, 60)
+(160, 59)
+(159, 57)
+(158, 55)
+(157, 53)
+(156, 48)
+(155, 47)
+(154, 45)
+(153, 42)
+(152, 41)
+(151, 36)
+(150, 32)
+
+
+
+【必須】使用言語・動作環境について
+(1)言語の種類を記入してください。未記入の場合、減点となります。
+
+Python
+
+(2)コンパイラ／インタプリタの名称・バージョン情報を記入してください。未記入の場合、減点となります。
+Python 2.7.8
+
+【必須】プログラムの特長・工夫した点等、アピールポイントについて。
+あなたが書いたコードの内容や工夫した点をわかりやすく説明してください。未記入の場合、減点となります。
+
+肩車ができるか、何人肩車できるかを求める責務をそれぞれクラスに分担して見通しを良くしています。
+肩車の一覧は肩車ができない人にたどり着くまで行うので、再帰でシンプルにまとめています。
+
+
+【任意】もし企業からのスカウトメールがきたらどのくらい積極的にアクションすると思いますか？下記の3つから選んでお答えください。
+ B.社名や条件次第では会ってみたいと思う
+
+
+
+【必須】あなたが書いたコードを貼り付けてください。未記入の場合は評価できません。
+コードが完全な形（そのままコンパイル・実行）できるものでない場合は程度に応じて減点の対象となります。
+# -*- coding: utf-8 -*-
+
+
+class Person(object):
+    def __init__(self, height, weight):
+        self.height = int(height)
+        self.weight = int(weight)
+
+    def can(self, other):
+        return self.height > other.height and self.weight > other.weight
+
+    def pair(self):
+        return (self.height, self.weight)
+
+    def __str__(self):
+        return "{}, {}".format(self.height, self.weight)
+
+
+class Relation(object):
+    def __init__(self, person, others):
+        self.person = person
+        self.children = set(o for o in others if person.can(o))
+        self.num = len(self.children)
+
+    def __cmp__(self, other):
+        # より多く持てる方が大きい
+        return self.num - other.num
+
+
+def create_persons(data):
+    return set(Person(*d) for d in data)
+
+
+def create_relations(persons):
+    return (Relation(p, persons - {p}) for p in persons)
+
+
+def collect(persons):
+    relations = create_relations(persons)
+    r = max(relations)
+    if r.children:
+        return [r.person.pair()] + collect(r.children)
+    else:
+        # 子がいなくなったら終了
+        return [r.person.pair()]
+
+
+def main(fob):
+    data = (d.rstrip().split(" ") for d in fob)
+    result = collect(create_persons(data))
+    for line in result:
+        print line
+
+if __name__ == '__main__':
+    print "============ small ======================"
+    with open("./small.in.txt") as f:
+        main(f)
+    print "============ large ======================"
+    with open("./large.in.txt") as f:
+        main(f)
